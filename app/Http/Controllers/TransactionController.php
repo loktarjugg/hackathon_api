@@ -15,11 +15,17 @@ class TransactionController extends Controller
     {
         $this->etherscanService = $etherscanService;
     }
+
+    public function getTransactions(string $address)
+    {
+        $transactions = $this->etherscanService->getNormalTransactions($address);
+
+        dd($transactions);
+    }
     public function syncTransaction(string $address)
     {
         $response = $this->etherscanService->getNormalTransactions($address);
 
-        dd($response);
         if (!$response){
             throw new InternalException('getTransactionCount error');
         }

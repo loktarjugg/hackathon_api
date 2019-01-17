@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Services\EtherscanService;
 use App\Transaction;
+use App\Watcher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -14,18 +15,16 @@ class SyncTransaction implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $address;
+    protected $watcher;
 
-    protected $params;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($address, $params = null)
+    public function __construct(Watcher $watcher)
     {
-        $this->address = $address;
-        $this->params = $params;
+        $this->watcher = $watcher;
     }
 
     /**
@@ -37,16 +36,17 @@ class SyncTransaction implements ShouldQueue
     {
         $etherscanService = new EtherscanService();
 
-        $page = is_array($this->params) && isset($this->params['page']) ? intval($this->params['page']) : 1;
-        $offset = is_array($this->params) && isset($this->params['offset']) ? intval($this->params['offset']) : 1000;
+        $transactionCount = $etherscanService->getTransactionCount($this->watcher->address);
 
         $response = $etherscanService
-            ->getNormalTransactions($this->address, $page, $offset);
+            ->getNormalTransactions($this->watcher->address);
 
         if (intval($response['status']) !== 1){
             return;
         }
 
-        Transaction::createMany($response['result']);
+        $this->watcher->block_number = hexdec($transactionCount['result']);
+        $this->watcher->sync_block_number = hexdec($transactionCount['result']);
+        $this->watcher->save();
     }
 }

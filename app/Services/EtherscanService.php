@@ -17,7 +17,7 @@ class EtherscanService
     const API_KEY = '';
 
 
-    public function getNormalTransactions(string $address, $page = 1, $offset = 50, $startBlock = 700000, $endBlock = 99999999)
+    public function getNormalTransactions(string $address, $startBlock = 0, $endBlock = 99999999)
     {
         // https://api.etherscan.io/api?module=account&action=txlist&address=0xddbd2b932c763ba5b1b7ae3b362eac3e8d40121a&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=YourApiKeyToken
 
@@ -27,8 +27,6 @@ class EtherscanService
             'address' => $address,
             'startblock' => $startBlock,
             'endblock' => $endBlock,
-            'page' => $page,
-            'offset' => $offset,
             'sort' => 'asc'
         ]);
 
