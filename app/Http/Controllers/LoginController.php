@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RegisterReuqest;
-use App\User;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
@@ -11,7 +9,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->request->add([
-            'username' => $request->get('email'),
+            'username' => $request->get('mobile'),
             'password' => $request->get('password'),
             'grant_type' => 'password',
             'client_id' => config('services.passport.client_id'),
@@ -27,16 +25,5 @@ class LoginController extends Controller
         $dispatch = \Route::dispatch($proxy);
 
         return $dispatch;
-    }
-
-    public function register(RegisterReuqest $request)
-    {
-        User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
-        ]);
-
-        return response()->json([]);
     }
 }

@@ -21,6 +21,7 @@ class CreateWatchersTable extends Migration
             $table->bigInteger('sync_block_number')->default(0);
             $table->decimal('score', 2)->default(0);
             $table->unique('address');
+            $table->boolean('status')->default(false)->comment('status 0 wait for processing 1 processed');
             $table->timestamps();
         });
     }

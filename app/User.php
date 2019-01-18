@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'mobile', 'password', 'ic_number', 'ic_photo'
     ];
 
     /**
@@ -27,6 +27,17 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    protected $casts = [
+        'is_enable' => 'bool'
+    ];
+
+    public function findForPassport($login)
+    {
+        return $this->where('mobile', $login)
+            ->where('is_enable', true)
+            ->first();
+    }
 
     public function watchers()
     {

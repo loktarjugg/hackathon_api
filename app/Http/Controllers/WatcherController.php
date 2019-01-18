@@ -11,7 +11,8 @@ class WatcherController extends Controller
 {
     public function index()
     {
-        $watchers = Watcher::query()->where('user_id', \Auth::id())
+        $watchers = Watcher::query()
+            ->where('user_id', \Auth::id())
             ->paginate();
 
         return WatcherResource::collection($watchers);

@@ -11,10 +11,10 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $email = 'test@hackathon.io';
-        \App\User::query()->where('email', $email)->firstOrCreate([
+        $mobile = '111111';
+        \App\User::query()->where('mobile', $mobile)->firstOrCreate([
            'name' => 'hackathon',
-           'email' => $email,
+           'mobile' => $mobile,
            'password' => bcrypt('123456')
         ]);
     }

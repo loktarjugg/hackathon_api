@@ -24,12 +24,15 @@ Route::get('/sync-transactions/{address}',
 
 
 Route::post('/login', 'LoginController@login')->name('login');
-Route::post('/register','LoginController@register')->name('register');
+Route::post('/register','RegisterController@register')->name('register');
+
+Route::post('/upload', 'UploadController@upload')->name('upload');
 
 Route::group(['middleware' => ['auth:api']],function (){
     Route::get('/user', 'UserController@info')->name('user');
-    Route::post('/watcher', 'WatcherController@store')->name('watcher.store');
-    Route::delete('/watcher/{id}', 'WatcherController@destroy')->name('watcher.destroy');
+    Route::get('/watchers', 'WatcherController@index')->name('watcher.index');
+    Route::post('/watchers', 'WatcherController@store')->name('watcher.store');
+    Route::delete('/watchers/{id}', 'WatcherController@destroy')->name('watcher.destroy');
 
     Route::get('/reports','ReportController@index')->name('reports.index');
     Route::post('/reports','ReportController@store')->name('reports.store');

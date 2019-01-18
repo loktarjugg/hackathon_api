@@ -25,7 +25,9 @@ class RegisterReuqest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|email|unique:users|max:255',
+            'mobile' => 'required|numeric|unique:users',
+            'ic_number' => 'required',
+            'ic_photo' => 'required|url',
             'password' => 'required|confirmed|min:6|string'
         ];
     }
