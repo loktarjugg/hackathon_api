@@ -112,10 +112,10 @@ class SyncTransaction implements ShouldQueue
             }
             if ($score === 100){
                 // 黑名单
-//                $this->watcher->score = 100;
+                $this->watcher->score = 100;
             }else{
                 if($hasEventBool){
-                    $this->watcher->score = bcdiv(bcmul(100, $unknownIncome), bcadd($unknownIncome, $cleanIncome));
+                    $this->watcher->score = bcdiv($unknownIncome, bcadd($unknownIncome, $cleanIncome));
                 }
 
             }
