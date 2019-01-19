@@ -13,8 +13,8 @@ use GuzzleHttp\Client;
 
 class EtherscanService
 {
-    const BASE_REQUEST_URL = 'https://api-rinkeby.etherscan.io/api';
-    const API_KEY = '';
+    const BASE_REQUEST_URL = 'https://api.etherscan.io/api';
+    const API_KEY = '5WQKCTS7RDXFNI89136JKE3HKASE6WPZMA';
 
 
     public function getNormalTransactions(string $address, $startBlock = 0, $endBlock = 99999999)
