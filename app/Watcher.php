@@ -12,4 +12,9 @@ class Watcher extends Model
         'sync_block_number',
         'score'
     ];
+
+    public function events()
+    {
+        return $this->hasMany(Event::class, 'address', 'address');
+    }
 }

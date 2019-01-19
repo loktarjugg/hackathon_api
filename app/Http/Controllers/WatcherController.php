@@ -12,6 +12,7 @@ class WatcherController extends Controller
     public function index()
     {
         $watchers = Watcher::query()
+            ->with('events')
             ->where('user_id', \Auth::id())
             ->paginate();
 
@@ -22,15 +23,24 @@ class WatcherController extends Controller
     {
         try{
             $watcher = \Auth::user()->watchers()->create([
-                'address' => $request->input('address')
+                'address' => strtolower($request->input('address'))
             ]);
-            $this->dispatch(new SyncTransaction($watcher));
+            SyncTransaction::dispatch($watcher);
             return new WatcherResource($watcher);
         }catch (\Exception $e){
             return response()->json([
                 'error' => 'handle error'
             ], 400);
         }
+    }
+
+    public function watcherAgain($id)
+    {
+        $watcher = Watcher::query()->findOrFail($id);
+
+        SyncTransaction::dispatch($watcher);
+
+        return response()->json([]);
     }
 
     public function destroy($id)

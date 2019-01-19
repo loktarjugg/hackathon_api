@@ -14,6 +14,13 @@ class WatcherResource extends Resource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'address' => $this->address,
+            'block_number' => $this->block_number,
+            'sync_block_number' => $this->sync_block_number,
+            'score' => $this->score,
+            'events' => EventResource::collection($this->whenLoaded('events'))
+        ];
     }
 }

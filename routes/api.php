@@ -31,6 +31,7 @@ Route::post('/upload', 'UploadController@upload')->name('upload');
 Route::group(['middleware' => ['auth:api']],function (){
     Route::get('/user', 'UserController@info')->name('user');
     Route::get('/watchers', 'WatcherController@index')->name('watcher.index');
+    Route::post('/watchers/{id}/watch-again', 'WatcherController@watcherAgain')->name('watcher.watcher-again');
     Route::post('/watchers', 'WatcherController@store')->name('watcher.store');
     Route::delete('/watchers/{id}', 'WatcherController@destroy')->name('watcher.destroy');
 

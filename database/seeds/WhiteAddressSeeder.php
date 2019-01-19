@@ -17,7 +17,7 @@ class WhiteAddressSeeder extends Seeder
 
         foreach ($lists as $address => $name) {
             WhiteAddress::create([
-                'address' => $address,
+                'address' => strtolower($address),
                 'name' => $name
             ]);
         }
