@@ -21,7 +21,7 @@ class CreateEventsTable extends Migration
             $table->string('from');
             $table->json('origin_data');
             $table->tinyInteger('status')->default(0)->comment('status 0 unknown 1 white 2 ');
-            $table->tinyInteger('tag')->default(0);
+            $table->string('tag',100)->default(0);
             $table->timestamps();
         });
     }

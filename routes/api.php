@@ -31,12 +31,14 @@ Route::post('/upload', 'UploadController@upload')->name('upload');
 Route::group(['middleware' => ['auth:api']],function (){
     Route::get('/user', 'UserController@info')->name('user');
     Route::get('/watchers', 'WatcherController@index')->name('watcher.index');
+    Route::get('/watchers/{id}', 'WatcherController@show')->name('watcher.show');
     Route::post('/watchers/{id}/watch-again', 'WatcherController@watcherAgain')->name('watcher.watcher-again');
     Route::post('/watchers', 'WatcherController@store')->name('watcher.store');
     Route::delete('/watchers/{id}', 'WatcherController@destroy')->name('watcher.destroy');
 
     Route::get('/reports','ReportController@index')->name('reports.index');
     Route::post('/reports','ReportController@store')->name('reports.store');
+    Route::patch('/events/{id}/update-tag', 'EventController@update')->name('events.update');
 });
 
 Route::get('/transactions/{address}', 'TransactionController@getTransactions');

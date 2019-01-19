@@ -9,6 +9,14 @@ use App\Watcher;
 
 class WatcherController extends Controller
 {
+    public function show($id)
+    {
+        $watchers = Watcher::query()
+            ->with('events')
+            ->where('user_id', \Auth::id())
+            ->findOrFail($id);
+        return new WatcherResource($watchers);
+    }
     public function index()
     {
         $watchers = Watcher::query()
