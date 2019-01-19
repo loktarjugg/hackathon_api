@@ -68,7 +68,7 @@ class SyncTransaction implements ShouldQueue
             })->map(function ($item){
                 return strtolower($item->address);
             });;
-            $hasEventBool = false;
+//            $hasEventBool = false;
             $score = 0;
             $cleanIncome = 0;
             $unknownIncome = 0;
@@ -82,7 +82,7 @@ class SyncTransaction implements ShouldQueue
                         ->where('from', strtolower($transaction['from']))
                         ->count();
                     if ($hasEvent === 0){
-                        $hasEventBool = true;
+//                        $hasEventBool = true;
                         if ($blacks->contains(strtolower($transaction['from']))){
                             $status = 2;
                             $score = 100;
@@ -110,16 +110,14 @@ class SyncTransaction implements ShouldQueue
                     $this->watcher->sync_block_number = $transaction['blockNumber'];
                 }
             }
+
             if ($score === 100){
                 // 黑名单
                 $this->watcher->score = 100;
             }else{
-                if($hasEventBool){
-                    $this->watcher->score = bcdiv($unknownIncome, bcadd($unknownIncome, $cleanIncome));
-                }
-
+                $score = bcdiv(bcmul(100, $unknownIncome), bcadd($unknownIncome, $cleanIncome));
             }
-
+            $this->watcher->score = $score;
             $this->watcher->save();
         }
     }

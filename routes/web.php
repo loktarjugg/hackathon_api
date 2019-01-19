@@ -11,3 +11,11 @@
 |
 */
 
+Route::get('/test',function (){
+
+    $unknownIncome = '24737651700000012000';
+    $cleanIncome = '150805000000000000000';
+   $test =  bcdiv(bcmul(100, $unknownIncome), bcadd($unknownIncome, $cleanIncome));
+
+   dd($test);
+});
