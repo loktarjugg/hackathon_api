@@ -19,8 +19,6 @@ class SyncTransaction implements ShouldQueue
 
     protected $watcher;
 
-//    public $queue = 'redis';
-
     /**
      * Create a new job instance.
      *
@@ -57,10 +55,23 @@ class SyncTransaction implements ShouldQueue
     {
         $count = count($response['result']);
         if (intval($response['status']) && $count > 0){
-            $whites = WhiteAddress::all()->map(function ($item){
-                return strtolower($item->address);
-            });
+            $allAddress = WhiteAddress::all();
 
+            $whites = $allAddress->filter(function ($item){
+               return $item->is_white === true;
+            })->map(function ($item){
+                return strtolower($item->address);
+            });;
+
+            $blacks = $allAddress->filter(function ($item){
+                return $item->is_white === false;
+            })->map(function ($item){
+                return strtolower($item->address);
+            });;
+            $hasEventBool = false;
+            $score = 0;
+            $cleanIncome = 0;
+            $unknownIncome = 0;
             foreach ($response['result'] as $key => $transaction) {
                 if (strtolower($transaction['to']) == strtolower($this->watcher->address)
                     && intval($transaction['value']) > 0){
@@ -71,7 +82,17 @@ class SyncTransaction implements ShouldQueue
                         ->where('from', strtolower($transaction['from']))
                         ->count();
                     if ($hasEvent === 0){
-                        $status = $whites->contains(strtolower($transaction['from'])) ? 1:0;
+                        $hasEventBool = true;
+                        if ($blacks->contains(strtolower($transaction['from']))){
+                            $status = 2;
+                            $score = 100;
+                        }elseif ($whites->contains(strtolower($transaction['from']))){
+                            $status = 1;
+                            $cleanIncome = bcadd($transaction['value'], $cleanIncome);
+                        }else{
+                            $status = 0;
+                            $unknownIncome = bcadd($transaction['value'], $unknownIncome);
+                        }
                         $this->watcher->events()->firstOrCreate([
                             'hash' => $transaction['hash'],
                             'address' => strtolower($transaction['to']),
@@ -87,10 +108,19 @@ class SyncTransaction implements ShouldQueue
                 if ($key === $count -1) {
                     $this->watcher->block_number = $blockNumber;
                     $this->watcher->sync_block_number = $transaction['blockNumber'];
-                    $this->watcher->save();
+                }
+            }
+            if ($score === 100){
+                // 黑名单
+//                $this->watcher->score = 100;
+            }else{
+                if($hasEventBool){
+                    $this->watcher->score = bcdiv(bcmul(100, $unknownIncome), bcadd($unknownIncome, $cleanIncome));
                 }
 
             }
+
+            $this->watcher->save();
         }
     }
 }

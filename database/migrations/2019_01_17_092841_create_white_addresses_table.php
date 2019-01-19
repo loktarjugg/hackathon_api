@@ -17,7 +17,7 @@ class CreateWhiteAddressesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('address', 128);
-            $table->boolean('disable')->default(false);
+            $table->boolean('is_white')->default(true);
             $table->timestamps();
         });
     }

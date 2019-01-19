@@ -9,6 +9,10 @@ class WhiteAddress extends Model
     protected $fillable = [
         'address',
         'name',
-        'disable'
+        'is_white'
+    ];
+
+    protected $casts = [
+        'is_white'=>'bool'
     ];
 }
